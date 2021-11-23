@@ -2,6 +2,7 @@
   "name": "ignews",
   "private": false,
   "version": "1.0.1",
+  "license": "MIT",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
@@ -13,6 +14,7 @@
   },
   "dependencies": {
     "next": "12.0.4",
+    "next-auth": "^3.29.0",
     "react": "17.0.2",
     "react-dom": "17.0.2",
     "react-icons": "^4.3.1",
@@ -22,6 +24,7 @@
   "devDependencies": {
     "@commitlint/cli": "^15.0.0",
     "@commitlint/config-conventional": "^15.0.0",
+    "@types/next-auth": "^3.15.0",
     "@types/node": "16.11.9",
     "@types/react": "17.0.36",
     "@typescript-eslint/eslint-plugin": "^5.4.0",
