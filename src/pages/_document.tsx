@@ -27,6 +27,7 @@ class MyDocument extends Document {
             rel="stylesheet"
             crossOrigin="anonymous"
           />
+          <link rel="shortcut icon" href="favicon.png" type="image/png" />
         </Head>
         <body>
           <Main />
