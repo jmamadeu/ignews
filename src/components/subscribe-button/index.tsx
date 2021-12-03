@@ -1,10 +1,13 @@
 import { signIn, useSession } from 'next-auth/client';
+
 import { api } from '../../services/api';
 import { getStripeJS } from '../../services/stripe-js';
 import styles from './styles.module.scss';
+import { useRouter } from 'next/router';
 
 export function SubscribeButton() {
   const [session] = useSession();
+  const { push } = useRouter();
 
   async function handleSubscribe() {
     if (!session) {
@@ -12,6 +15,13 @@ export function SubscribeButton() {
 
       return;
     }
+
+    if (session?.activeSubscription) {
+      push('/posts');
+
+      return;
+    }
+
     try {
       const { data } = await api.post('/subscribe');
 

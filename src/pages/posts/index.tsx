@@ -1,11 +1,13 @@
 import { GetStaticProps } from 'next';
 import Head from 'next/head';
+import Link from 'next/link';
 import Prismic from '@prismicio/client';
 import { RichText } from 'prismic-dom';
 import { getPrismicClient } from '../../services/prismic';
 import styles from './styles.module.scss';
+import { useSession } from 'next-auth/client';
 
-type PostProperties = {
+export type PostProperties = {
   slug: string;
   title: string;
   excerpt: string;
@@ -17,6 +19,10 @@ type PostProps = {
 };
 
 export default function Posts({ posts }: PostProps) {
+  const [session] = useSession();
+
+  const getPostURL = (slug: string) =>
+    session?.activeSubscription ? `/posts/${slug}` : `/posts/preview/${slug}`;
   return (
     <>
       <Head>
@@ -26,13 +32,15 @@ export default function Posts({ posts }: PostProps) {
       <main className={styles.container}>
         <div className={styles.posts}>
           {posts?.map((post) => (
-            <a key={post.slug} href="!#">
-              <time>{post.updatedAt}</time>
+            <Link key={post.slug} href={getPostURL(post.slug)}>
+              <a>
+                <time>{post.updatedAt}</time>
 
-              <strong>{post.title}</strong>
+                <strong>{post.title}</strong>
 
-              <p>{post.excerpt}</p>
-            </a>
+                <p>{post.excerpt}</p>
+              </a>
+            </Link>
           ))}
         </div>
       </main>
@@ -72,11 +80,9 @@ export const getStaticProps: GetStaticProps = async () => {
     };
   } catch (err: any) {
     console.log(err);
-  }
 
-  return {
-    props: {
-      a: 1
-    }
-  };
+    return {
+      props: {}
+    };
+  }
 };
