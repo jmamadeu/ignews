@@ -1,7 +1,22 @@
+import { GetStaticProps } from 'next';
 import Head from 'next/head';
+import Prismic from '@prismicio/client';
+import { RichText } from 'prismic-dom';
+import { getPrismicClient } from '../../services/prismic';
 import styles from './styles.module.scss';
 
-export default function Posts() {
+type PostProperties = {
+  slug: string;
+  title: string;
+  excerpt: string;
+  updatedAt: string;
+};
+
+type PostProps = {
+  posts: Array<PostProperties>;
+};
+
+export default function Posts({ posts }: PostProps) {
   return (
     <>
       <Head>
@@ -10,67 +25,58 @@ export default function Posts() {
 
       <main className={styles.container}>
         <div className={styles.posts}>
-          <a href="!#">
-            <time>March 12th</time>
+          {posts?.map((post) => (
+            <a key={post.slug} href="!#">
+              <time>{post.updatedAt}</time>
 
-            <strong>How to code</strong>
+              <strong>{post.title}</strong>
 
-            <p>
-              Lorem ipsum dolor sit amet consectetur, adipisicing elit. Dolorum
-              in asperiores impedit odit molestias, perspiciatis voluptas ea,
-              similique praesentium neque recusandae at, consequatur ab!
-              Blanditiis suscipit enim voluptates iste cupiditate! Lorem ipsum
-              dolor sit amet consectetur adipisicing elit. Consequuntur vitae
-              minima perspiciatis suscipit neque cumque quos adipisci eligendi
-              similique! Laudantium, sint odit nam doloribus dolorum suscipit
-              velit vel amet. Iste. Lorem ipsum dolor sit amet consectetur,
-              adipisicing elit. Deleniti quidem distinctio dolor. Cumque ullam,
-              autem at ipsa obcaecati beatae facilis eum ad doloremque? Nulla
-              minus aspernatur cumque exercitationem blanditiis atque?
-            </p>
-          </a>
-
-          <a href="!#">
-            <time>March 12th</time>
-
-            <strong>How to code</strong>
-
-            <p>
-              Lorem ipsum dolor sit amet consectetur, adipisicing elit. Dolorum
-              in asperiores impedit odit molestias, perspiciatis voluptas ea,
-              similique praesentium neque recusandae at, consequatur ab!
-              Blanditiis suscipit enim voluptates iste cupiditate! Lorem ipsum
-              dolor sit amet consectetur adipisicing elit. Consequuntur vitae
-              minima perspiciatis suscipit neque cumque quos adipisci eligendi
-              similique! Laudantium, sint odit nam doloribus dolorum suscipit
-              velit vel amet. Iste. Lorem ipsum dolor sit amet consectetur,
-              adipisicing elit. Deleniti quidem distinctio dolor. Cumque ullam,
-              autem at ipsa obcaecati beatae facilis eum ad doloremque? Nulla
-              minus aspernatur cumque exercitationem blanditiis atque?
-            </p>
-          </a>
-
-          <a href="!#">
-            <time>March 12th</time>
-
-            <strong>How to code</strong>
-
-            <p>
-              Lorem ipsum dolor sit amet consectetur, adipisicing elit. Dolorum
-              in asperiores impedit odit molestias, perspiciatis voluptas ea,
-              similique praesentium neque recusandae at, consequatur ab!
-              Blanditiis suscipit enim voluptates iste cupiditate! Lorem ipsum
-              dolor sit amet consectetur adipisicing elit. Consequuntur vitae
-              minima perspiciatis suscipit neque cumque quos adipisci eligendi
-              similique! Laudantium, sint odit nam doloribus dolorum suscipit
-              velit vel amet. Iste. Lorem ipsum dolor sit amet consectetur,
-              adipisicing elit. Deleniti quidem distinctio dolor. Cumque ullam,
-              autem at ipsa obcaecati beatae facilis eum ad doloremque? Nulla
-              minus aspernatur cumque exercitationem blanditiis atque?
-            </p>
-          </a>
+              <p>{post.excerpt}</p>
+            </a>
+          ))}
         </div>
       </main>
     </>
   );
 }
+
+export const getStaticProps: GetStaticProps = async () => {
+  try {
+    const prismic = getPrismicClient();
+
+    const docs = await prismic.query([
+      Prismic.predicates.at('document.type', 'post')
+    ]);
+
+    const posts = docs.results.map((post) => ({
+      slug: post.uid,
+      title: RichText.asText(post.data.title),
+      excerpt:
+        post.data.content.find(
+          (content: { type: string }) => content.type === 'paragraph'
+        )?.text ?? '',
+
+      updatedAt: new Date(
+        post.last_publication_date as string
+      ).toLocaleDateString('pt-Br', {
+        day: '2-digit',
+        month: 'long',
+        year: 'numeric'
+      })
+    }));
+
+    return {
+      props: {
+        posts
+      }
+    };
+  } catch (err: any) {
+    console.log(err);
+  }
+
+  return {
+    props: {
+      a: 1
+    }
+  };
+};

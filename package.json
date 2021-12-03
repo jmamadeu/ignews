@@ -13,11 +13,16 @@
     "format": "npm run lint && npm run prettier:write"
   },
   "dependencies": {
+    "@prismicio/client": "^5.1.0",
     "@stripe/stripe-js": "^1.21.1",
+    "@types/prismic-dom": "^2.1.1",
     "axios": "^0.24.0",
     "faunadb": "^4.4.1",
     "next": "12.0.4",
     "next-auth": "^3.29.0",
+    "next-slicezone": "^0.1.3",
+    "prismic-dom": "^2.2.6",
+    "prismic-reactjs": "^1.3.4",
     "react": "17.0.2",
     "react-dom": "17.0.2",
     "react-icons": "^4.3.1",
