@@ -2,6 +2,8 @@
 
 Web app to simulate text content subscription platform
 
+[See how it looks like](https://ignews-jmamadeu.vercel.app/)
+
 <hr>
 
 ### Core Techs
