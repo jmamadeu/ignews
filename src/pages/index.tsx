@@ -1,4 +1,5 @@
 import type { GetStaticProps, NextPage } from 'next';
+
 import Head from 'next/head';
 import { SubscribeButton } from '../components/subscribe-button';
 import { stripe } from '../services/stripe';
@@ -30,7 +31,7 @@ const Home: NextPage<HomeProps> = ({ product }) => {
             <span>for {product?.amount} month</span>
           </p>
 
-          <SubscribeButton priceId={product.priceId} />
+          <SubscribeButton />
         </section>
 
         <img src="/images/avatar.svg" alt="girl coding" />
