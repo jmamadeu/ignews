@@ -30,7 +30,7 @@ export default function PostPreview({ post }: PostPreviewProperties) {
   return (
     <>
       <Head>
-        <title>{post?.title}</title>
+        <title>ig.news | {post?.title}</title>
       </Head>
 
       <main className={styles.container}>
